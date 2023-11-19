@@ -1,12 +1,27 @@
 
 :root {
+  --c1:  #3CB371;
+  --c2:  #cadaca;
+  --c3:  #000a00;
 	--bg-col:#1f0011;
 	--txt-col:#33ff11;
 	--border-col:#00ff00;
 	--content-bg-col:#664400;
 }
 
-
+.main-box {
+  background-color: var(--c2);
+  width: 40%;
+  min-width: 15em;
+  border: 1em solid var(--c1);
+  padding: 3em;
+  margin: 2em;
+     margin-left:auto;
+    margin-right:auto;
+  text-align: center;
+  margin:8em auto;
+}
+ 
 html, body {
 	margin: 0 auto;
 }
@@ -66,8 +81,29 @@ table-layout: fixed;
 	 color:var(--txt-col);
 	 background-color: var(--content-bg-col);
  }
- a{
-text-decoration: none;
-	 color:var(--txt-col);
- }
- body {}
+
+ /*top banner*/
+.top_link {
+  color: var(--c2);
+}
+.head-th{
+  border-left: 2px solid var(--c2);
+  border-right: 2px solid var(--c2);;
+  color: var(--c2);
+}
+.head-th:first-child {
+  border-left: 0px solid black;
+  border-right: 0px solid black;
+}
+.head-th:last-child {
+  border-left: 0px solid black;
+  border-right: 0px solid black;
+}
+.head-tbl table, th, td {
+  border-collapse: collapse;
+}
+
+
+
+
+
