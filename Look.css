@@ -11,17 +11,37 @@ html, body {
 	margin: 0 auto;
 }
 
-
 html {background-color: var(--bg-col);}
 .content {
-
-	margin: 8em auto;
-	width: 50%;
+   margin: 1em 1em;
 	border: 3px solid var(--border-col);;
 	padding: 10px;
 	text-align: center;
 	color:var(--txt-col);
 	background-color: var(--content-bg-col);
+}
+
+.content.img{
+margin-top:2%;
+margin-bottom:auto;
+}
+.content.img.right {
+margin-right:5%; 
+margin-left:1%;
+}
+.content.img.left {
+margin-right:1%; 
+margin-left:5%;
+}
+.content.top {
+   border-bottom: 0px;
+}
+.content.bottom {
+   border-top: 0px;
+}
+.content.mid{
+   border-bottom: 0px;
+   border-top: 0px;
 }
  .head {
 	 position: fixed;
@@ -42,7 +62,7 @@ table-layout: fixed;
 	 padding: 0px;
 	 text-align: center;
 	 margin: 0 auto;
-	 border: 1px solid var(--border-col);;
+	 border: 1x solid var(--border-col);;
 	 color:var(--txt-col);
 	 background-color: var(--content-bg-col);
  }

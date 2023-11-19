@@ -2,7 +2,7 @@
 target="/var/www/html/"
 
 files="index.html about.html"
-filesRaw="Look.css"
+filesRaw="Look.css content/"
 
 for x in $files; do
    sudo cat head.html >  "$target$x"
@@ -11,8 +11,7 @@ for x in $files; do
 done
 
 for x in $filesRaw; do
-   sudo cp "$x" "$target$x"
-	
+   sudo cp -r "$x" "$target$x"
 done
 #sudo cp index.html /var/www/html/
 
