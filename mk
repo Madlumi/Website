@@ -1,7 +1,7 @@
 #!/bin/sh
 target="/var/www/html/"
 
-files="index.roff about.html"
+files="index.roff about.html portfolio.html"
 filesRaw="Look.css content/"
 
 #compile
