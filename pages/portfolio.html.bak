@@ -3,7 +3,7 @@
 
 <h2>Tools</h2>
 	<h3><a href="https://github.com/Madlumi/TTS-Text-Parser">TTS text Parser</a></h3>
-	<p>Breaks up text into smaller strings to improve the responsiveness of my text to speech setup.</p>
+	<p>Breaks up text into smaller strings to improve the responsiveness of my text to speach setup.</p>
 	<h3><a href="https://github.com/Madlumi/My-Dwm-Patches">Dwm Patches</a></h3>
 	<p>Patches</p>
 
@@ -12,16 +12,16 @@
 <br>
 <h2>Games</h2>
 	<h3><a href="https://ldjam.com/events/ludum-dare/54/space-10000km">Space: 10000km</a><sup>[Ludum Dare 54]</sup></h3>
-	<p>Adventure/Puzzle game made in Godot, I aimed to emulate an early 2000's art style. A large focus was put on cut scenes. I like the aesthetics, although they would've been largely enhanced by better and more sound design. The main failure in this project was the ux.</p>
+	<p>Adventure/Puzzle game made in Godot, I aimed to emulate an early 2000's artstyle. A large focus was put on cutscenes. I like the asteatics, although they would've been largely enhanced by better and more sound design. The main failure in this project was the ux.</p>
 <br>
 	<h3><a href="https://ldjam.com/events/ludum-dare/53/stl-last-mile">STL: Last mile</a><sup>[Ludum Dare 53]</sup></h3>
-	<p>A delivery sim with a focus on 3d movement, made in Godot. I think the movement works out but the rest of the gameplay is lacking.</p>
+	<p>A deliery sim with a focus on 3d movement, made in Godot. I think the movement works out but the rest of the gameplay is lacking.</p>
 <br>
-	<h3><a href="https://ldjam.com/events/ludum-dare/51/mr-kittys-mana-poition">Mr. Kitty's mana potions</a><sup>[Ludum Dare 51]</sup></h3>
+	<h3><a href="https://ldjam.com/events/ludum-dare/51/mr-kittys-mana-poition">Mr. Kittys mana potions</a><sup>[Ludum Dare 51]</sup></h3>
 <p>Spell based tower defence, badly balanced, made in Godot.</p>
 <br>
 	<h3><a href="https://ldjam.com/events/ludum-dare/48/sleepy-cat-drill">Sleepy Cat Drill</a><sup>[Ludum Dare 48]</sup></h3>
-<p>A hot mess of a mini-game collection, made in Godot.</p>
+<p>A hot mess of a minigame collection, made in Godot.</p>
 <br>
 	<h3><a href="https://ldjam.com/events/ludum-dare/47/gunguin">Gunguin</a><sup>[Ludum Dare 47]</sup></h3>
 <p>Simple platformer, made in Godot</p>
@@ -30,13 +30,13 @@
 <p>adventure game, made in java.</p>
 <br>
 	<h3><a href="https://ldjam.com/events/ludum-dare/44/lost-coin">Lost Coin</a><sup>[Ludum Dare 44]</sup></h3>
-<p>Platformer with semi gameboy like aesthetics, made in Java.</p>
+<p>Platformer with semi gameboy like astetics, made in Java.</p>
 <br>
 	<h3><a href="https://ldjam.com/events/ludum-dare/43/god-pleaser">God Pleaser</a><sup>[Ludum Dare 43]</sup></h3>
 <p>2D city builder made in Java</p>
 <br>
 	<h3><a href="https://github.com/Madlumi/LD34">Ants</a><sup>[Ludum Dare 34]</sup></h3>
-<p>An ant colony sim, I can't quite remember how it works, balance food and eggs or something, made in Java.</p>
+<p>An ant colony sim, I can't quite remeber how it works, balance food and eggs or something, made in Java.</p>
 <br>
 	<h3><a href="https://github.com/Madlumi/LD33">Mutant</a><sup>[Ludum Dare 33]</sup></h3>
 <p>Beat up humans, mutate, get stronger, made in Java.</p>
