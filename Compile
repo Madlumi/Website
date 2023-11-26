@@ -1,0 +1,33 @@
+#!/bin/sh
+target="out/"
+
+fileDir="pages/"
+#files="index.html about.html portfolio.html"
+filesRaw="Look.css content/"
+
+#compile
+for f in "$fileDir"*; do
+	x=$(basename -- "$f")
+	echo "$f -> $target$x"
+	cat blocks/head.html > "$target$x"
+	cat blocks/bg.html   >>"$target$x"
+	cat "$f"        >>"$target$x"
+	cat blocks/end.html  >>"$target$x"
+	if [ -n "$x_targ" ] ;then 
+		#rm "$x_targ"
+		x_targ=''
+	fi
+done
+exit
+#non compiled files
+for x in $filesRaw; do
+	cp -r "$x" "$target$x"
+done
+
+echo "Compilation done"
+#cd "$target"
+#git init
+#git remote add origin git@github.com:Madlumi/madlumi.github.io.git
+#git add --all
+#git commit -m "Compiled"
+#git push --set-upstream origin master --force
