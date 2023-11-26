@@ -1,5 +1,5 @@
 #!/bin/sh
-target="/var/www/html/"
+target="out/"
 
 files="index.roff about.html portfolio.html"
 filesRaw="Look.css content/"
@@ -20,10 +20,10 @@ for x in $files; do
 			;;
 			
 	esac
-	sudo cat head.html >  "$target$x"
-	sudo cat bg.html >>  "$target$x"
-	sudo cat $x        >>"$target$x"
-	sudo cat end.html  >>"$target$x"
+	cat head.html >  "$target$x"
+	cat bg.html >>  "$target$x"
+	cat $x        >>"$target$x"
+	cat end.html  >>"$target$x"
 	if [ -n "$x_targ" ] ;then 
 		#rm "$x_targ"
 		x_targ=''
@@ -32,6 +32,10 @@ done
 
 #non compiled files
 for x in $filesRaw; do
-	sudo cp -r "$x" "$target$x"
+	cp -r "$x" "$target$x"
 done
 
+cd "$target"
+git add *
+git commit -m "Compiled"
+git push --set-upstream origin master --force
