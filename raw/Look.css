@@ -1,20 +1,32 @@
 
 :root {
-  --c1:  #3CB371;
+  --c1:  #3CB371; 
   --c2:  #cadaca;
-  --c3:  #000a00;
+  --linkCol:  #3CB3A1; 
+  --linkClCol:  #5C9381; 
+  --linkHoCol:  #AB8391; 
+  --textCol:  #000a00;
 	--bg-col:#1f0011;
 	--txt-col:#33ff11;
 	--border-col:#00ff00;
 	--content-bg-col:#664400;
 }
-
+p {
+	color: var(--textCol);
+} 
+a:link {color: var(--linkCol);}
+a:visited {color: var(--linkClCol);}
+a:hover {color: var(--linkHoCol);}
+.main-img {
+  border: .6em solid var(--c1);
+  margin:.6em .6em;
+}
 .main-box {
   background-color: var(--c2);
   width: 60%;
   min-width: 15em;
   border: 1em solid var(--c1);
-  padding: 3em;
+  padding: 1em;
   margin: 2em;
      margin-left:auto;
     margin-right:auto;
