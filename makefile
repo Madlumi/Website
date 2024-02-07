@@ -1,6 +1,8 @@
 compile:
 	./Compile
 
+local: compile
+	sudo cp -r out/* /var/www/html/
 push: compile
 	cd out; \
 	git init; \
