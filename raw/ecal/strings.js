@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (C) 2025 Edvin svenblad
 
 // =====================
 // All user‐facing text, keyed by language.
@@ -7,28 +9,35 @@ const STRINGS = {
 	app_title: {
 		sv: "Energi kalkyl",
 		en: "Energy Calculator",
-		fi: "Energi laskuri"
+                fi: "Energialaskuri"
 	},
 
-	print_button		: {sv:"Skriv ut", en:"print"},
+	print_button            : { sv: "Skriv ut", en: "Print", fi: "Tulosta" },
 	option_housetype_SMALL 	: { sv:"Småhus", en:"Single House", fi:"Pientalo" },
-	option_housetype_MULTI 	: { sv:"Flerbostadshus", en:"Multi-family", fi:"Moniasunto" },
+	option_housetype_MULTI  : { sv: "Flerbostadshus", en: "Multi-family", fi: "Kerrostalo" },
 	option_housetype_LOCAL 	: { sv:"Lokal", en:"Commercial", fi:"Liiketila" },
 	upper_limits_heading 	: { sv:"Övre gränser:", en:"Upper limits:", fi:"Ylärajat:" },
 
 	// Disclaimer (only shown if non‐empty)
-	disclaimer: {
-		sv: "",
-		en: "⚠  Unverified Machine translated text",
-		fi: "⚠ Tämä teksti on konekäännetty eikä sitä ole tarkistanut ihminen."
-	},
+        disclaimer: {
+                sv: "⚠ Du ansvarar själv för de beräknade resultaten.",
+                en: "⚠ Unverified machine translated text. You are responsible for the calculated results.",
+                fi: "⚠ Tämä teksti on konekäännetty eikä sitä ole tarkistanut ihminen. Käyttäjä on vastuussa laskettujen tulosten paikkansapitävyydestä."
+        },
 
 	// Language selector (labels not strictly necessary since flags are obvious)
-	language_label: {
-		sv: "Språk:",
-		en: "Language:",
-		fi: "Kieli:"
-	},
+        language_label: {
+                sv: "Språk:",
+                en: "Language:",
+                fi: "Kieli:"
+        },
+
+        // Skip link text
+        skip_main: {
+                sv: "Hoppa till huvudinnehåll",
+                en: "Skip to main content",
+                fi: "Siirry pääsisältöön"
+        },
 
 	// Geography
 	geography_label: {
@@ -48,13 +57,95 @@ const STRINGS = {
 		en: "House Type:",
 		fi: "Talotyyppi:"
 	},
-	housetype_help: {
-		sv: "",
-		en: "",
-		fi: ""
-	},
+        housetype_help: {
+                sv: "",
+                en: "",
+                fi: ""
+        },
 
-	// Footnotes heading + labels
+        // Input section headings
+        section_basic_heading: {
+                sv: "Grunduppgifter",
+                en: "Basic Info",
+                fi: "Perustiedot"
+        },
+        section_tvv_heading: {
+                sv: "Tappvarmvatten",
+                en: "Hot Water",
+                fi: "Lämmin vesi"
+        },
+        section_energy_heading: {
+                sv: "Energifaktorer",
+                en: "Energy Factors",
+                fi: "Energiatekijät"
+        },
+
+        section_energyinput_heading: {
+                sv: "Energiinmatning",
+                en: "Energy Input",
+                fi: "Energian syöttö"
+        },
+        heatEnergy_label: {
+                sv: "Värmeenergi (kWh):",
+                en: "Heating energy:",
+                fi: "Lämmitysenergia:"
+        },
+        heatEnergyType_label: {
+                sv: "Typ:",
+                en: "Type:",
+                fi: "Tyyppi:"
+        },
+        coolEnergy_label: {
+                sv: "Kylenergi (kWh):",
+                en: "Cooling energy:",
+                fi: "Jäähdytysenergia:"
+        },
+        fastEnergy_label: {
+                sv: "Fastighetsenergi (kWh):",
+                en: "Facility energy:",
+                fi: "Kiinteistöenergia:"
+        },
+        section_deductions_heading: {
+                sv: "Avdrag",
+                en: "Deductions",
+                fi: "Vähennykset"
+        },
+        dedPersons_label: {
+                sv: "Personer:",
+                en: "People:",
+                fi: "Henkilöt:"
+        },
+        dedPersons_help: {
+                sv: "Tabell 6:3 – Värden för beräkning av antal personer i bostäder<br><table><tr><th>Antal rum och kök</th><td>1<sup>1</sup></td><td>2</td><td>3</td><td>4</td><td>5+</td></tr><tr><th>Antal personer</th><td>1,42</td><td>1,63</td><td>2,18</td><td>2,79</td><td>3,51</td></tr></table><p><sup>1</sup> Inklusive 1 rum och kokvrå</p>",
+                en: "Table 6:3 – Values for calculating number of persons in dwellings<br><table><tr><th>Rooms + kitchen</th><td>1<sup>1</sup></td><td>2</td><td>3</td><td>4</td><td>5+</td></tr><tr><th>People</th><td>1.42</td><td>1.63</td><td>2.18</td><td>2.79</td><td>3.51</td></tr></table><p><sup>1</sup> Includes 1 room with kitchenette</p>",
+                fi: "Taulukko 6:3 – Arvot henkilömäärän laskentaan asunnoissa<br><table><tr><th>Huoneet ja keittiö</th><td>1<sup>1</sup></td><td>2</td><td>3</td><td>4</td><td>5+</td></tr><tr><th>Henkilöt</th><td>1,42</td><td>1,63</td><td>2,18</td><td>2,79</td><td>3,51</td></tr></table><p><sup>1</sup> Sisältää 1 huoneen ja keittokomeron</p>"
+        },
+        dedPersonHeat_label: {
+                sv: "Personvärme (W):",
+                en: "Person heat (W):",
+                fi: "Henkilölämpö (W):"
+        },
+        dedTime_label: {
+                sv: "Tid (h/d/v):",
+                en: "Time (h/d/w):",
+                fi: "Aika (h/p/v):"
+        },
+        dedTime_hours_unit: {
+                sv: "h/d",
+                en: "h/d",
+                fi: "h/p"
+        },
+        dedTime_days_unit: {
+                sv: "d/v",
+                en: "d/w",
+                fi: "p/v"
+        },
+        dedTime_weeks_unit: {
+                sv: "v/år",
+                en: "w/yr",
+                fi: "vk/v"
+        },
+        // Footnotes heading + labels
 	footnotes_heading: {
 		sv: "Extra ventilationsfotnoter (endast flerbostadshus):",
 		en: "Extra ventilation footnotes (only multi‐family):",
@@ -116,11 +207,16 @@ const STRINGS = {
 		en: "Flow (q):",
 		fi: "Virtaus (q):"
 	},
-	flow_help: {
-		sv: "Utluftsflöde i liter per sekund och kvadratmeter.",
-		en: "Outairflow in liters per second per square meter.",
-		fi: "Ulkouutislämpö litroina sekunnissa neliömetrillä."
-	},
+        flow_help: {
+                sv: "Utluftsflöde i liter per sekund och kvadratmeter.",
+                en: "Exhaust airflow in liters per second per square meter.",
+                fi: "Poistoilmavirta litroina sekunnissa neliömetriä kohti."
+        },
+        flow_error: {
+                sv: "Ogiltigt flöde.",
+                en: "Invalid flow value.",
+                fi: "Virheellinen virtausarvo."
+        },
 
 	// Atemp
 	atemp_label: {
@@ -128,11 +224,32 @@ const STRINGS = {
 		en: "Atemp (m²):",
 		fi: "Atemp (m²):"
 	},
-	atemp_help: {
-		sv: "Arean av samtliga våningsplan, vindsplan och källarplan för temperaturreglerade utrymmen, avsedda att värmas till mer än 10 °C, som begränsas av klimatskärmens insida. Area som upptas av innerväggar, öppningar för trappa, schakt och dylikt inräknas. Area för garage inräknas inte.",
-		en: "The area of all floors, attic, and basement for temperature‐controlled spaces intended to be heated above 10 °C, bounded by the interior of the building envelope. Area occupied by interior walls, stair openings, shafts, etc., is included; garage area (inside the building) is not counted.",
-		fi: "Lämpötilasäädeltyjen tilojen pinta‐ala, mukaan lukien kaikki kerrokset, yläkerrat ja kellarit, jotka on tarkoitus lämmittää yli 10 °C, sisäisen rakennuskuoren sisällä. Sisäseinien, portaiden, hormien jne. pinta‐ala sisältyy; autotallin pinta‐alaa ei lasketa."
-	},
+        atemp_help: {
+                sv: "Arean av samtliga våningsplan, vindsplan och källarplan för temperaturreglerade utrymmen, avsedda att värmas till mer än 10 °C, som begränsas av klimatskärmens insida. Area som upptas av innerväggar, öppningar för trappa, schakt och dylikt inräknas. Area för garage inräknas inte.",
+                en: "The area of all floors, attic, and basement for temperature‐controlled spaces intended to be heated above 10 °C, bounded by the interior of the building envelope. Area occupied by interior walls, stair openings, shafts, etc., is included; garage area (inside the building) is not counted.",
+                fi: "Lämpötilasäädeltyjen tilojen pinta‐ala, mukaan lukien kaikki kerrokset, yläkerrat ja kellarit, jotka on tarkoitus lämmittää yli 10 °C, sisäisen rakennuskuoren sisällä. Sisäseinien, portaiden, hormien jne. pinta‐ala sisältyy; autotallin pinta‐alaa ei lasketa."
+        },
+        atemp_error: {
+                sv: "Ogiltigt Atemp-värde.",
+                en: "Invalid Atemp value.",
+                fi: "Virheellinen Atemp-arvo."
+        },
+        rooms_label: {
+                sv: "Rum + kök:",
+                en: "Rooms + kitchen:",
+                fi: "Huoneet + keittiö:"
+        },
+        
+        tvvType_label: {
+                sv: "Tappvarmvattenkälla:",
+                en: "Hot water source:",
+                fi: "Lämminvesilähde:"
+        },
+        tvvType_help: {
+                sv: "",
+                en: "",
+                fi: ""
+        },
 
 	// Permalink
 	permalink_label: {
@@ -152,11 +269,21 @@ const STRINGS = {
 		en: "Clear Form",
 		fi: "Tyhjennä lomake"
 	},
-	copy_button: {
-		sv: "Kopiera länk",
-		en: "Copy Link",
-		fi: "Kopioi linkki"
-	},
+        copy_button: {
+                sv: "Kopiera länk",
+                en: "Copy Link",
+                fi: "Kopioi linkki"
+        },
+        clipboard_error: {
+                sv: "Urklipp inte tillgängligt, kopiera manuellt.",
+                en: "Clipboard unavailable, please copy manually.",
+                fi: "Leikepöytä ei käytettävissä, kopioi käsin."
+        },
+        hourly_label: {
+                sv: "Använd timvis simulering",
+                en: "Use hourly simulation",
+                fi: "Käytä tuntilaskentaa"
+        },
 
 	// EPpet + help
 	ep_label: {
@@ -197,18 +324,31 @@ const STRINGS = {
 		fi: "Rakennuksen lämmöneristys on oltava niin tiivis, että ensisijainen energiakerroin ja asennettu lämmitystehovaatimus täyttyvät."
 	},
 
-	warning_tooltip: {
-		sv: "Överskrider gräns",
-		en: "Exceeds limit",
-		fi: "Ylittää rajan"
-	},
+        warning_tooltip: {
+                sv: "Överskrider gräns",
+                en: "Exceeds limit",
+                fi: "Ylittää rajan"
+        },
 
-	// “No requirement” literal to replace 9999
-	no_requirement: {
-		sv: "Inget krav",
-		en: "No requirement",
-		fi: "Ei vaatimus"
-	},
+        help_icon_label: {
+                sv: "Visa hjälp",
+                en: "Show help",
+                fi: "Näytä ohje"
+        },
+
+	// “No requirement” literal to replace 999999999
+        no_requirement: {
+                sv: "Inget krav",
+                en: "No requirement",
+                fi: "Ei vaatimusta"
+        },
+
+        // Text shown when no energy class applies
+        na_label: {
+                sv: "N/A",
+                en: "N/A",
+                fi: "N/A"
+        },
 
 	// Energy‐use table label + row labels
 	energy_table_label: {
@@ -239,19 +379,19 @@ const STRINGS = {
 
 	// Row‐specific help
 	energy_row_heat_help: {
-		sv: "Energi till uppvärmning",
-		en: "",
-		fi: ""
+                sv: "Energi till uppvärmning",
+                en: "Energy for heating",
+                fi: "Energia lämmitykseen"
 	},
 	energy_row_cool_help: {
-		sv: "Energi till komfortkyla, kWh/år. Den till byggnaden levererade kyl- eller energimängd som används för att sänka byggnadens innetemperatur för människors komfort.  Kylenergi som hämtas direkt från omgivningen utan kylmaskin från sjövatten, uteluft eller dylikt (s.k. frikyla), inräknas inte.",
-		en: "",
-		fi: ""
+                sv: "Energi till komfortkyla, kWh/år. Den till byggnaden levererade kyl- eller energimängd som används för att sänka byggnadens innetemperatur för människors komfort.  Kylenergi som hämtas direkt från omgivningen utan kylmaskin från sjövatten, uteluft eller dylikt (s.k. frikyla), inräknas inte.",
+                en: "Energy for comfort cooling, kWh/yr. Cooling or energy delivered to the building to lower indoor temperature for occupant comfort. Cooling energy taken directly from the surroundings without a chiller (so-called free cooling) is not included.",
+                fi: "Mukavuusjäähdytyksen energia, kWh/v. Rakennukseen toimitettu jäähdytys- tai energiamäärä, jota käytetään sisälämpötilan alentamiseen. Ympäristöstä suoraan ilman kylmäkonetta otettava jäähdytysenergia (ns. vapaajäähdytys) ei sisälly."
 	},
 	energy_row_watr_help: {
-		sv: "Energi till tappvarmvatten",
-		en: "",
-		fi: ""
+                sv: "Energi till tappvarmvatten",
+                en: "Energy for domestic hot water",
+                fi: "Lämpimän käyttöveden energia"
 	},
 	energy_row_fast_help: {
 		sv: "Fastighetsenergi, kWh/år. Den del av byggnadens energianvändning som är relaterad till byggnadens behov där den energikrävande apparaten finns inom under eller anbringad på utsidan av byggnaden. I fastighetsenergin ingår fast belysning i allmänna utrymmen och driftsutrymmen. Dessutom ingår energi som används i värmekablar, pumpar, fläktar, motorer, styr‐ och övervakningsutrustning och dylikt. Även externt lokalt placerad apparat som försörjer byggnaden, exempelvis pumpar och fläktar för frikyla, inräknas. Apparater avsedda för annan användning än för byggnaden, exempelvis motor‐ och kupévärmare för fordon, batteriladdare för extern användare, belysning i trädgård och på gångstråk, inräknas inte. Med fastighetsel menas den del av fastighetsenergin som är elbaserad.",
@@ -260,11 +400,37 @@ const STRINGS = {
 	},
 
 	// “?” icon character
-	info_icon: {
-		sv: "?",
-		en: "?",
-		fi: "?"
-	},
+        info_icon: {
+                sv: "?",
+                en: "?",
+                fi: "?"
+        },
+
+        calc_icon: {
+                sv: "\uD83E\uDDEE", // calculator emoji
+                en: "\uD83E\uDDEE",
+                fi: "\uD83E\uDDEE"
+        },
+        pen_icon: {
+                sv: "\u270E", // pencil
+                en: "\u270E",
+                fi: "\u270E"
+        },
+        calc_tooltip: {
+                sv: "Använd beräknat värde",
+                en: "Use calculated value",
+                fi: "Käytä laskettua arvoa"
+        },
+        pen_tooltip: {
+                sv: "Skriv in manuellt",
+                en: "Enter manually",
+                fi: "Syötä käsin"
+        },
+        calc_help: {
+                sv: "Markerad: använd beräknade eller förinställda värden.<br>Avmarkerad: ange manuellt",
+                en: "Checked: use calculated or preset values.<br>Unchecked: enter values manually",
+                fi: "Valittuna: käytä laskettuja tai esiasetettuja arvoja.<br>Ei valittuna: syötä arvot käsin"
+        },
 
 
 
@@ -291,4 +457,66 @@ const STRINGS = {
 		en: "",
 		fi: ""
 	},
+        footer_repo_label:  { sv: "Källkod:", en: "Source code:", fi: "Lähdekoodi:" },
+        footer_version_label:{ sv: "Version:", en: "Version:", fi: "Versio:" }
+};
+
+// Labels and placeholders for the print page UI
+const PRINT_UI_STRINGS = {
+        address_label:    { sv: "Byggnadens adress:", en: "Building address:", fi: "Rakennuksen osoite:" },
+        municipality_label:{ sv: "Kommun:", en: "Municipality:", fi: "Kunta:" },
+        year_label:       { sv: "Nybyggnadsår:", en: "Year built:", fi: "Rakennusvuosi:" },
+        id_label:         { sv: "Energideklarations-ID:", en: "Energy declaration ID:", fi: "Energiatodistus ID:" },
+        energy_label:     { sv: "Energiprestanda, primärenergital:", en: "Energy performance, primary energy value:", fi: "Energiatehokkuus, primäärienergialuku:" },
+        requirement_label:{ sv: "Krav vid uppförande av\n ny byggnad, primärenergital:", en: "Requirement for new building, primary energy value:", fi: "Uuden rakennuksen vaatimus, primäärienergialuku:" },
+        heating_label:    { sv: "Uppvärmningssystem:", en: "Heating system:", fi: "Lämmitysjärjestelmä:" },
+        radon_label:      { sv: "Radonmätning:", en: "Radon measurement:", fi: "Radonmittaus:" },
+        ovk_label:        { sv: "Ventilationskontroll (OVK):", en: "Ventilation inspection (OVK):", fi: "Ilmanvaihdon tarkastus (OVK):" },
+        suggestions_label:{ sv: "Åtgärdsförslag:", en: "Proposed measures:", fi: "Toimenpide-ehdotukset:" },
+        performed_label:  { sv: "Energideklarationen är utförd av:", en: "Declaration performed by:", fi: "Energiatodistuksen on laatinut:" },
+        valid_label:      { sv: "Energideklarationen är giltig till:", en: "Declaration valid until:", fi: "Energiatodistus voimassa asti:" },
+
+        address_placeholder:     { sv: "Gatunamn", en: "Street name", fi: "Katuosoite" },
+        municipality_placeholder:{ sv: "kommun", en: "municipality", fi: "kunta" },
+        year_placeholder:        { sv: "t.ex. 2009", en: "e.g. 2009", fi: "esim. 2009" },
+        id_placeholder:          { sv: "t.ex. 3671", en: "e.g. 3671", fi: "esim. 3671" },
+        energy_placeholder:      { sv: "t.ex. 162", en: "e.g. 162", fi: "esim. 162" },
+        requirement_placeholder: { sv: "100 kWh/m² och år", en: "100 kWh/m² per year", fi: "100 kWh/m² vuodessa" },
+        heating_placeholder:     { sv: "Värmepump-luft/luft (el) och el", en: "Air heat pump (electric) and electricity", fi: "Ilmalämpöpumppu (sähkö) ja sähkö" },
+        radon_placeholder:       { sv: "Inte utförd", en: "Not performed", fi: "Ei tehty" },
+        ovk_placeholder:         { sv: "Utförd", en: "Performed", fi: "Suoritettu" },
+        suggestions_placeholder: { sv: "Har lämnats", en: "Provided", fi: "Annettu" },
+        performed_placeholder:   { sv: "Namn Efternamn, LL, 2025-05-27", en: "Name Surname, LL, 2025-05-27", fi: "Nimi Sukunimi, LL, 2025-05-27" },
+        valid_placeholder:       { sv: "2035-05-27", en: "2035-05-27", fi: "2035-05-27" },
+        print_button:            { sv: "Skriv ut", en: "Print", fi: "Tulosta" },
+};
+
+// Text shown on the printable certificate itself
+const PRINT_STRINGS = {
+        summary_of:        { sv: "sammanfattning av", en: "summary of", fi: "yhteenveto" },
+        title:             { sv: "ENERGIBERÄKNING", en: "ENERGY DECLARATION", fi: "ENERGIATODISTUS" },
+        year_label:        { sv: "Nybyggnadsår:", en: "Year built:", fi: "Rakennusvuosi:" },
+        id_label:          { sv: "Energideklarations-ID:", en: "Energy declaration ID:", fi: "Energiatodistus ID:" },
+        classes_heading:   { sv: "ENERGIKLASSER", en: "ENERGY CLASSES", fi: "ENERGIALUOKAT" },
+        full_declaration:  { sv: "Energideklarationen i sin helhet", en: "The full energy declaration", fi: "Koko energiatodistus" },
+        kept_by_owner:     { sv: "finns hos byggnadens ägare.", en: "is kept by the building owner.", fi: "on rakennuksen omistajalla." },
+        more_info:         { sv: "För mer information:", en: "For more information:", fi: "Lisätietoja:" },
+        info_site:         { sv: "www.regeringen.ax", en: "www.regeringen.ax", fi: "www.regeringen.ax" },
+        summary_law:       { sv: "Sammanfattningen är upprättad enligt Ålands landskapslag (2014:31) om energideklaration för byggnader.",
+                             en: "This summary is prepared according to Åland's Act (2014:31) on energy declarations for buildings.",
+                             fi: "Yhteenveto on laadittu Ahvenanmaan maakuntalain (2014:31) mukaisesti rakennusten energiatodistuksista." },
+        building_class:    { sv: "DENNA BYGGNADS ENERGIKLASS", en: "THIS BUILDING'S ENERGY CLASS", fi: "TÄMÄN RAKENNUKSEN ENERGIATODISTUSLUOKKA" },
+        energy_label:      { sv: "Energiprestanda, primärenergital:", en: "Energy performance, primary energy value:", fi: "Energiatehokkuus, primäärienergialuku:" },
+        energy_unit:       { sv: "kWh/m² och år", en: "kWh/m² per year", fi: "kWh/m² vuodessa" },
+        requirement_label: { sv: "Krav vid uppförande av<br> ny byggnad, primärenergital:",
+                             en: "Requirement for new building, primary energy value:",
+                             fi: "Uuden rakennuksen vaatimus, primäärienergialuku:" },
+        heating_label:     { sv: "Uppvärmningssystem:", en: "Heating system:", fi: "Lämmitysjärjestelmä:" },
+        radon_label:       { sv: "Radonmätning:", en: "Radon measurement:", fi: "Radonmittaus:" },
+        ovk_label:         { sv: "Ventilationskontroll (OVK):", en: "Ventilation inspection (OVK):", fi: "Ilmanvaihdon tarkastus (OVK):" },
+        suggestions_label: { sv: "Åtgärdsförslag:", en: "Proposed measures:", fi: "Toimenpide-ehdotukset:" },
+        performed_label:   { sv: "Energideklarationen är utförd av:", en: "Declaration performed by:", fi: "Energiatodistuksen on laatinut:" },
+        valid_label:       { sv: "Energideklarationen är giltig till:", en: "Declaration valid until:", fi: "Energiatodistus voimassa asti:" },
+        classes_svg_title: { sv: "Skala med energiklasser", en: "Scale of energy classes", fi: "Energialuokkaskaala" },
+        house_svg_title:   { sv: "Illustration av byggnadens energiklass", en: "Illustration of the building's energy class", fi: "Rakennuksen energialuokan kuva" },
 };

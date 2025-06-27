@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (C) 2025 Edvin svenblad
 
 //============================
 // Core logic for the app
@@ -32,6 +34,61 @@ const E_name = [
   /* BIOBRANSLE  */ "Biobränslen",
   /* FOSSIL_OLJA */ "Fossil olja",
   /* FOSSIL_GAS  */ "Fossil gas"
+];
+
+//============================
+//=Common numeric constants===
+//============================
+const FLOW_THRESHOLD      = 0.35; // l/s·m² base limit for flow calculations
+const MAX_CREDITED_FLOW   = 0.6;  // highest q_medel allowed in ep4
+const EP_FLOW_FACTOR      = 40;   // multiplier for ventilation additions to EP
+const EL_FLOW_BASE        = 0.022; // base coefficient for EL increase due to flow
+const EL_F_GEO_MULT       = 0.02; // factor applied to F_geo in EL formulas
+const EL_AREA_BASE        = 0.025; // base coefficient for EL increase due to area
+const ATEMP_LIMIT         = 130;  // area limit for certain EL calculations
+const AREA_THRESHOLD      = 50;   // common area threshold for multi dwelling rules
+const INFILTRATION_LIMIT  = 0.60; // air leakage limit for houses without EP req
+
+//============================
+//=Limit constants============
+//============================
+const SMALL_LIMIT_HIGH_ATEMP = 90;  // threshold for second EP band in small houses
+const SMALL_EP_OVER_ATEMP_LIMIT = 90.0; // EP limit when Atemp > ATEMP_LIMIT
+const SMALL_EP_MID_ATEMP = 95.0;   // EP limit when Atemp > SMALL_LIMIT_HIGH_ATEMP
+const SMALL_EP_BASE = 100.0;       // EP limit when Atemp > AREA_THRESHOLD
+const SMALL_U_VALUE = 0.30;        // U-value limit for small houses
+const NO_REQ_U_VALUE = 0.33;       // U-value limit when no EP requirement applies
+const MULTI_EP_BASE = 75.0;        // base EP requirement for multi-dwelling houses
+const MULTI_U_VALUE = 0.40;        // U-value requirement for multi-dwelling houses
+const LOCAL_EP_BASE = 70.0;        // base EP requirement for local premises
+const LOCAL_U_VALUE = 0.50;        // U-value requirement for local premises
+
+//============================
+//=Tappvarmvatten=============
+//============================
+class TvvEntry {
+  constructor(name, factor, etype) {
+    this.name = name;
+    this.factor = factor;
+    this.etype = etype;
+  }
+}
+
+const tvvFactors = [
+  new TvvEntry("Fjärrvärme", 1.00, EType.FJARRVARME),
+  new TvvEntry("El, direktverkande och elpanna", 1.00, EType.ELECTRIC),
+  new TvvEntry("El, frånluftsvärmepump", 1.70, EType.ELECTRIC),
+  new TvvEntry("El, uteluft-vattenvärmepump", 2.00, EType.ELECTRIC),
+  new TvvEntry("El, markvärmepump (berg, mark, sjö)", 2.50, EType.ELECTRIC),
+  new TvvEntry("Biobränslepanna (pellets, ved, flis m.m.)", 0.75, EType.BIOBRANSLE),
+  new TvvEntry("Olja", 0.85, EType.FOSSIL_OLJA),
+  new TvvEntry("Gaspanna", 0.90, EType.FOSSIL_GAS)
+];
+
+const TvvMult = [
+  /* SMALL */ 20,
+  /* MULTI */ 25,
+  /* LOCAL */ 2
 ];
 
 //============================
@@ -74,6 +131,9 @@ class Energy {
     this.cool = Array(EType.E_TYPE_COUNT).fill(0);
     this.watr = Array(EType.E_TYPE_COUNT).fill(0);
     this.fast = Array(EType.E_TYPE_COUNT).fill(0);
+    this.heat_ren = Array(EType.E_TYPE_COUNT).fill(0);
+    this.cool_ren = Array(EType.E_TYPE_COUNT).fill(0);
+    this.watr_ren = Array(EType.E_TYPE_COUNT).fill(0);
   }
 }
 
@@ -81,17 +141,25 @@ class Energy {
 //=House======================
 //============================
 class House {
-  constructor(type, Atemp, location) {
+  constructor(type, Atemp, location, tvvSrc = tvvFactors[0]) {
     this.type   = type;      // HouseType
     this.Atemp  = Atemp;     // Heated area in m²
     this.E      = new Energy(); // Energy uses
     this.L      = location;  // Location object
     this.flow   = 0.0;       // Instantaneous airflow (q) [l/s·m²]
     this.qavg   = 0.0;       // Average airflow (q_medel) [l/s·m²]
+    this.Rooms  = 0;         // rooms+kitchens
+    this.HouseHoldEnergy = 0.0; // placeholder for household energy
+    this.uval   = { U_roof: 0.0 }; // list of u-values
+    this.energyusage = null; // pointer/function for usage data
     this.foot2  = false;     // Footnote‐2 flag (LOCAL)
     this.foot3  = false;     // Footnote‐3 flag (LOCAL)
     this.foot4  = false;     // Footnote‐4 flag (MULTI)
     this.foot5  = false;     // Footnote‐5 flag (MULTI)
+    this.tvvSrc = tvvSrc;    // source of hot water
+
+    // standardised tappvarmvatten energy use
+    this.E.watr[tvvSrc.etype] = Tvv(this);
   }
 }
 
@@ -110,7 +178,8 @@ class LimitVals {
 //============================
 //=Helper Functions============
 //============================
-const NoReq = 9999.0;
+// “No requirement” value (falls back to large number if not configured)
+const NoReq = CONFIG?.CONSTANTS?.NOREQ_VALUE ?? 999999999.0;
 const seSec = -1.0;
 
 function elBase(F_geo) {
@@ -119,45 +188,48 @@ function elBase(F_geo) {
 
 function el1(F_geo, atemp) {
   // (0,025 + 0,02 × (F_geo − 1)) × (Atemp − 130) om Atemp > 130 m²
-  if (atemp <= 130) { return 0; }
-  return (0.025 + 0.02 * (F_geo - 1.0)) * (atemp - 130);
+  if (atemp <= ATEMP_LIMIT) { return 0; }
+  return (EL_AREA_BASE + EL_F_GEO_MULT * (F_geo - 1.0)) * (atemp - ATEMP_LIMIT);
 }
 
 function ep2(qavg) {
   // 40 × (q_medel − 0,35) om q_medel > 0,35
-  if (qavg <= 0.35) { return 0; }
-  return 40 * (qavg - 0.35);
+  if (qavg <= FLOW_THRESHOLD) { return 0; }
+  return EP_FLOW_FACTOR * (qavg - FLOW_THRESHOLD);
 }
 
 function el3(F_geo, flow, atemp) {
   // (0,022 + 0,02 × (F_geo − 1)) × (flow − 0,35) × Atemp om flow > 0,35 l/s·m²
-  if (flow <= 0.35) { return 0; }
-  return (0.022 + 0.02 * (F_geo - 1.0)) * (flow - 0.35) * atemp;
+  if (flow <= FLOW_THRESHOLD) { return 0; }
+  return (EL_FLOW_BASE + EL_F_GEO_MULT * (F_geo - 1.0)) * (flow - FLOW_THRESHOLD) * atemp;
 }
 
 function ep4(F_geo, flow, qavg, atemp, Foot4) {
-  qavg = flow; // treat instantaneous as average here
   // ... i flerbostadshus där Atemp är 50 m² eller större
-  if (atemp < 50) { return 0; }
+  if (atemp < AREA_THRESHOLD) { return 0; }
   // q_medel är uteluftsflödet i temperaturreglerade utrymmen överstiger 0,35 l/s·m²
-  if (qavg <= 0.35) { return 0; }
+  if (qavg <= FLOW_THRESHOLD) { return 0; }
   // Tillägget kan enbart användas på grund av krav på ventilation i särskilda utrymmen som badrum, toalett och kök
   if (!Foot4) { return 0; }
-  // får högst tillgodoräknas upp till 0,6 l/s·m²
-  if (qavg > 0.6) { qavg = 0.6; }
-  return 40 * (qavg - 0.35);
+  // q_medel får högst tillgodoräknas upp till 0,6 l/s·m²
+  if (qavg > MAX_CREDITED_FLOW) { qavg = MAX_CREDITED_FLOW; }
+  return EP_FLOW_FACTOR * (qavg - FLOW_THRESHOLD);
 }
 
 function el5(F_geo, flow, atemp, Foot5) {
   // ... i flerbostadshus där Atemp är 50 m² eller större
-  if (atemp < 50) { return 0; }
+  if (atemp < AREA_THRESHOLD) { return 0; }
   // Tillägget kan enbart användas då det maximala uteluftsflödet vid DVUT ... överstiger 0,35 l/s·m²
-  if (flow <= 0.35) { return 0; }
+  if (flow <= FLOW_THRESHOLD) { return 0; }
   // på grund av krav på ventilation i särskilda utrymmen som badrum, toalett och kök
   // och som till övervägande delen (>50 % Atemp) inrymmer lägenheter med en boarea om högst 35 m² vardera
   if (!Foot5) { return 0; }
   // Tillägg får göras med (0,022 + 0,02 × (F_geo − 1)) × (flow − 0,35) × Atemp
-  return (0.022 + 0.02 * (F_geo - 1.0)) * (flow - 0.35) * atemp;
+  return (EL_FLOW_BASE + EL_F_GEO_MULT * (F_geo - 1.0)) * (flow - FLOW_THRESHOLD) * atemp;
+}
+
+function Tvv(house) {
+  return TvvMult[house.type] * house.Atemp / house.tvvSrc.factor;
 }
 
 //============================
@@ -169,9 +241,9 @@ function EPpet(house) {
   const Atemp = house.Atemp;
 
   for (let i = 0; i < EType.E_TYPE_COUNT; i++) {
-    const heat = house.E.heat[i];
-    const cool = house.E.cool[i];
-    const watr = house.E.watr[i];
+    const heat = house.E.heat[i] - house.E.heat_ren[i];
+    const cool = house.E.cool[i] - house.E.cool_ren[i];
+    const watr = house.E.watr[i] - house.E.watr_ren[i];
     const fast = house.E.fast[i];
     total += ((heat / F_geo) + cool + watr + fast) * (E_wght[i] / Atemp);
   }
@@ -189,103 +261,83 @@ function limit(house) {
   const qavg = house.qavg;
 
   if (house.type === HouseType.SMALL) {
-    if (atemp > 130) {
-      l.EP = 90.0;
+    if (atemp > ATEMP_LIMIT) {
+      l.EP = SMALL_EP_OVER_ATEMP_LIMIT;
       l.EL = elBase(F_geo) + el1(F_geo, atemp);
-      l.UM = 0.30;
+      l.UM = SMALL_U_VALUE;
       l.LL = seSec;
-    } else if (atemp > 90) {
-      l.EP = 95.0;
+    } else if (atemp > SMALL_LIMIT_HIGH_ATEMP) {
+      l.EP = SMALL_EP_MID_ATEMP;
       l.EL = elBase(F_geo) + el1(F_geo, atemp);
-      l.UM = 0.30;
+      l.UM = SMALL_U_VALUE;
       l.LL = seSec;
-    } else if (atemp > 50) {
-      l.EP = 100.0;
+    } else if (atemp > AREA_THRESHOLD) {
+      l.EP = SMALL_EP_BASE;
       l.EL = elBase(F_geo) + el1(F_geo, atemp);
-      l.UM = 0.30;
+      l.UM = SMALL_U_VALUE;
       l.LL = seSec;
     } else /* atemp >= 0 */ {
       l.EP = NoReq;
       l.EL = NoReq;
-      l.UM = 0.33;
-      l.LL = 0.60;
+      l.UM = NO_REQ_U_VALUE;
+      l.LL = INFILTRATION_LIMIT;
     }
   }
   else if (house.type === HouseType.MULTI) {
     if (atemp >= 0) {
-      l.EP = 75.0 + ep4(F_geo, flow, qavg, atemp, house.foot4);
+      l.EP = MULTI_EP_BASE + ep4(F_geo, flow, qavg, atemp, house.foot4);
       l.EL = elBase(F_geo)
              + el1(F_geo, atemp)
              + el5(F_geo, flow, atemp, house.foot5);
-      l.UM = 0.40;
+      l.UM = MULTI_U_VALUE;
       l.LL = seSec;
     }
   }
   else if (house.type === HouseType.LOCAL) {
-    if (atemp > 50) {
+    if (atemp > AREA_THRESHOLD) {
       // Only add ep2(qavg) if foot2 is checked
       const ep_add = house.foot2 ? ep2(qavg) : 0;
       // Only add el3(...) if foot3 is checked
       const el_add = house.foot3 ? el3(F_geo, flow, atemp) : 0;
 
-      l.EP = 70.0 + ep_add;
+      l.EP = LOCAL_EP_BASE + ep_add;
       l.EL = elBase(F_geo)
              + el1(F_geo, atemp)
              + el_add;
-      l.UM = 0.50;
+      l.UM = LOCAL_U_VALUE;
       l.LL = seSec;
     } else /* atemp >= 0 */ {
       l.EP = NoReq;
       l.EL = NoReq;
-      l.UM = 0.33;
-      l.LL = 0.60;
+      l.UM = NO_REQ_U_VALUE;
+      l.LL = INFILTRATION_LIMIT;
     }
   }
 
   return l;
 }
 
-//============================
-//=Print House Data===========
-//============================
-function printHouse(house) {
-  console.log(`House type: ${HouseType_name[house.type]}`);
-  console.log(`Atemp: ${house.Atemp} m²`);
-  console.log(`Location: ${house.L.name} (F_geo = ${house.L.F_geo.toFixed(2)})`);
-  console.log(`Flow (q): ${house.flow.toFixed(2)}   qavg (q_medel): ${house.qavg.toFixed(2)}`);
-  console.log(`Foot2: ${house.foot2 ? "Yes" : "No"}   Foot3: ${house.foot3 ? "Yes" : "No"}   Foot4: ${house.foot4 ? "Yes" : "No"}   Foot5: ${house.foot5 ? "Yes" : "No"}`);
-  console.log("Energy use:");
-  for (let i = 0; i < EType.E_TYPE_COUNT; i++) {
-    let line = "";
-    if (house.E.heat[i] !== 0.0) line += `  ${E_name[i]} heat: ${house.E.heat[i].toFixed(1)}  `;
-    if (house.E.cool[i] !== 0.0) line += `  ${E_name[i]} cool: ${house.E.cool[i].toFixed(1)}  `;
-    if (house.E.watr[i] !== 0.0) line += `  ${E_name[i]} watr: ${house.E.watr[i].toFixed(1)}  `;
-    if (house.E.fast[i] !== 0.0) line += `  ${E_name[i]} fast: ${house.E.fast[i].toFixed(1)}  `;
-    if (line) console.log(line);
-  }
-  const ep = EPpet(house);
-  console.log(`Calculated EP: ${ep}`);
-  const lim = limit(house);
-  console.log(`Limits → EP: ${lim.EP.toFixed(1)}, EL: ${lim.EL.toFixed(1)}, UM: ${lim.UM.toFixed(2)}, LL: ${lim.LL.toFixed(2)}`);
+
+// Export for Node.js testing
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    EType,
+    E_wght,
+    E_name,
+    Location,
+    locations,
+    HouseType,
+    HouseType_name,
+    Energy,
+    House,
+    LimitVals,
+    elBase,
+    el1,
+    ep2,
+    el3,
+    ep4,
+    el5,
+    EPpet,
+    limit
+  };
 }
-
-//============================
-//=Main (example)=============
-//============================
-(function main() {
-  // Create a House (Åland, SMALL, Atemp = 100)
-
-	/*
-  // Example inputs:
-  const h = new House(HouseType.SMALL, 100, locations[1]);
-  h.E.heat[EType.ELECTRIC]   = 120.0;
-  h.E.cool[EType.FJARRKYLA]  = 40.0;
-  h.flow     = 0.5;    // example instantaneous airflow (q)
-  h.qavg     = 0.4;    // example average airflow (q_medel)
-  h.foot2    = true;   // footnote‐2 applies (LOCAL)
-  h.foot3    = true;   // footnote‐3 applies (LOCAL)
-  h.foot4    = true;   // footnote‐4 applies (MULTI)
-  h.foot5    = true;   // footnote‐5 applies (MULTI)
-
-  printHouse(h);*/
-})();
