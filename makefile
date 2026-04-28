@@ -2,7 +2,7 @@ compile:
 	./Compile
 
 local: compile
-	sudo cp -r out/* /var/www/html/
+	cd out && python3 -m http.server 8080
 push: compile
 	cd out; \
 	git init; \
